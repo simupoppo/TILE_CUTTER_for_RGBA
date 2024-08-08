@@ -105,7 +105,7 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
             for temp_Nx in range(Nx):
                 for temp_Ny in range(Ny):
                     temp_base_x=basepoint_x-(Nx-1-temp_Nx)*paksize//2+(Ny-1-temp_Ny)*paksize//2
-                    temp_base_y=basepoint_y-(Nx-1-temp_Nx)*paksize//4-(Ny-1-temp_Ny)*paksize//4-(using_Nz-1-temp_Nz)*paksize//4
+                    temp_base_y=basepoint_y-(Nx-1-temp_Nx)*paksize//4-(Ny-1-temp_Ny)*paksize//4-(temp_Nz)*paksize//4
                     cutting(temp_base_x,temp_base_y,temp_Nx,temp_Ny,temp_Nz)
         
                         
