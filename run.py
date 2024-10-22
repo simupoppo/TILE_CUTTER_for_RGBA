@@ -1,0 +1,2 @@
+import TILE_CUTTER_RGBA
+TILE_CUTTER_RGBA.make_window()

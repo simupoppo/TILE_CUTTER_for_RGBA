@@ -24,11 +24,13 @@ class tile_cutter_rgba():
             print(imge.mode)
             im = np.array(imge)
             print(im.shape)
-            imX = im.shape[0]
-            imY = im.shape[1]
+            imX = im.shape[1]
+            imY = im.shape[0]
             if self.location_x<0 or self.location_x>=imX:
+                print(self.location_x)
                 return 2
-            if self.location_y<0 or self.location_y>=imY:
+            if self.location_y<0 or self.location_y>imY:
+                print(self.location_y)
                 return 2
             if self.Nz<0:
                 return 2
@@ -76,9 +78,9 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
                                 else:
                                     temp_return=bgcolor
                             else:
-                                if temp_base_y-paksize<=temp_y<=(ix//2)+temp_base_y-paksize//4:
+                                if temp_base_y-paksize*3//4<=temp_y<=(ix//2)+temp_base_y-paksize//4:
                                     temp_return=temp_img[temp_y,temp_x]
-                                    print(temp_return,temp_img[temp_y,temp_x],temp_y,temp_x)
+                                    # print(temp_return,temp_img[temp_y,temp_x],temp_y,temp_x)
                                 else:
                                     temp_return=bgcolor
                         else:
@@ -88,7 +90,7 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
                                 else:
                                     temp_return=bgcolor
                             else:
-                                if temp_base_y-paksize<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4:
+                                if temp_base_y-paksize*3//4<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4:
                                     temp_return=temp_img[temp_y,temp_x]
                                 else:
                                     temp_return=bgcolor
@@ -98,7 +100,7 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
                     temp_return=bgcolor
                 outimg[(temp_Ny+Ny*temp_Nz)*paksize+iy,temp_Nx*paksize+ix]=temp_return
                 if temp_mode!=0:
-                    if (ix<paksize//2 and temp_y<=(ix//2)+temp_base_y-paksize//4) or (ix>paksize//2-1 and temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4):
+                    if (ix<paksize//2 and temp_base_y-paksize*3//4<=temp_y<=(ix//2)+temp_base_y-paksize//4) or (ix>paksize//2-1 and temp_base_y-paksize*3//4<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4):
                         temp_img[temp_y,temp_x]=bgcolor
     def extract_copy():
         for temp_Nz in range(using_Nz):
@@ -157,7 +159,6 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
     # print(outimg)
     print(outimg.shape)
     return outimg
-
 
 
 
@@ -235,4 +236,3 @@ def make_window():
     #main_frm.columnconfigure(1, wieght=1)
     main_win.mainloop()
     
-make_window()
