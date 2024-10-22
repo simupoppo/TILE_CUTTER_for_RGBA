@@ -47,5 +47,5 @@ pov-rayで制作したオブジェクトをsimutransの建物アドオン用に4
 使用は自己責任でお願いいたします。
 
 # release note
-2024.08.08 v0.0 TILE_CUTTER_RGBA 作成
+2024.08.08 v0.0 TILE_CUTTER_RGBA 作成  
 2024.10.23 v1.0 simutrans_building_addon_maker_with_pov-ray 作成
