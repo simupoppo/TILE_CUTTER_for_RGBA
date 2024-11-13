@@ -1,7 +1,7 @@
 import subprocess as sb
 
 class render_povray():
-    def __init__(self,infile,outfile,paksize,tilesize_x,tilesize_y,tilesize_z,winter):
+    def __init__(self,infile,outfile,paksize,tilesize_x,tilesize_y,tilesize_z,winter,make_front=0):
         self.infile=infile
         self.outfile=outfile
         self.paksize=int(paksize)
@@ -9,6 +9,7 @@ class render_povray():
         self.Ny=int(tilesize_y)
         self.Nz=int(tilesize_z)
         self.winter=int(winter)
+        self.make_front=int(make_front)
     def flag(self):
         def declare_povray(param,input_str):
             return "#declare "+str(param)+"="+str(input_str)+";\n"
@@ -24,6 +25,7 @@ class render_povray():
                 f.write(declare_povray("number_width",max(self.Nx,self.Ny)))
                 f.write(declare_povray("number_hight",max(self.Nx,self.Ny,self.Nz//2)))
                 f.write(declare_povray("winter",self.winter))
+                f.write(declare_povray("make_front_image",self.make_front))
             # rendering
             outname=self.outfile[:-4]
             if outname=="":
@@ -74,8 +76,25 @@ class povray_template():
             f.write('// \n//\n//\n')
             f.write('// ---put the obj---\n')
             f.write('#declare output_obj=\nobject{\n\tobj\n}\n')
+            f.write('// ---output_area_set---\n')
+            f.write('#declare output_area_set_x=\n')
+            f.write('#if(make_front_image)\n')
+            f.write('object{merge{box{<0-0.1,paksize/8,0-0.1>,<paksize*int_x/2+0.1,paksize*int_y,paksize*int_z/2+0.1>}box{<0-0.11,0+paksize/128,paksize*int_z/4>,<paksize*int_x/2+0.11,paksize*int_y,paksize*int_z/2+0.11>}}}\n')
+            f.write('#else\n')
+            f.write('object{box{<0-0.1,-paksize*int_y,0-0.1>,<paksize*int_x/2+0.1,paksize*int_y,paksize*int_z/2>}}\n')            
+            f.write('#end\n')
+            f.write('#declare output_area_set_z=\n')
+            f.write('#if(make_front_image)\n')
+            f.write('object{merge{box{<-paksize,paksize/8,-paksize>,<paksize*(int_x+2)/2+0.1,paksize*int_y,paksize*(int_z+2)/2+0.1>}box{<paksize*int_x/4,0+paksize/128,0-0.11>,<paksize*int_x/2+0.11,paksize*int_y,paksize*int_z/2+0.11>}}}\n')
+            f.write('#else\n')
+            f.write('object{box{<-paksize,-paksize*int_y,-paksize>,<paksize*(int_x+2)/2+0.1,paksize*int_y,paksize*(int_z+2)/2>}}\n')            
+            f.write('#end\n')
             f.write('// Place objects in 4 directions\n')
-            f.write('object{merge{\n\tobject{output_obj\n\t\ttranslate<-1,0,1>*paksize*number_width*3/4\n\t}\n\tobject{output_obj\n\t\trotate<0,90,0>\n\t\ttranslate<-1,0,1>*paksize*number_width*1/4\n\t\ttranslate<0,0,1>*paksize*int_x/2\n\t}\n\tobject{output_obj\n\t\trotate<0,180,0>\n\t\ttranslate<-1,0,1>*paksize*number_width*(-1)/4\n\t\ttranslate<0,0,1>*paksize*int_y/2\n\t\ttranslate<1,0,0>*paksize*int_x/2\n\t}\n\tobject{output_obj\n\t\trotate<0,270,0>\n\t\ttranslate<-1,0,1>*paksize*number_width*(-3)/4\n\t\ttranslate<1,0,0>*paksize*int_y/2\n\t}}\n\tscale<1,.8165,1> // To set 1 distance of y direction as 1px, rescaling the hight\n}\n')
+            f.write('object{merge{\n\tobject{\n')
+            f.write('\tintersection{object{output_obj}\n\tobject{output_area_set_x}}\n\t\ttranslate<-1,0,1>*paksize*number_width*3/4\n\t}\n\tobject{\n')
+            f.write('\tintersection{object{output_obj\n\t\trotate<0,90,0>\n\t\ttranslate<0,0,1>*paksize*int_x/2}\n\tobject{output_area_set_z}}\n\t\ttranslate<-1,0,1>*paksize*number_width*1/4\n\t}\n\tobject{\n')
+            f.write('\tintersection{object{output_obj\n\t\trotate<0,180,0>\n\t\ttranslate<0,0,1>*paksize*int_y/2\n\t\ttranslate<1,0,0>*paksize*int_x/2}\n\tobject{output_area_set_x}}\n\t\ttranslate<-1,0,1>*paksize*number_width*(-1)/4\n\t}\n\tobject{\n')
+            f.write('\tintersection{object{output_obj\n\t\trotate<0,270,0>\n\t\ttranslate<1,0,0>*paksize*int_y/2}\n\tobject{output_area_set_z}}\n\t\ttranslate<-1,0,1>*paksize*number_width*(-3)/4\n\t}}\n\tscale<1,.8165,1> // To set 1 distance of y direction as 1px, rescaling the hight\n}\n')
         return
     def make_template(self):
         self.write_snow()

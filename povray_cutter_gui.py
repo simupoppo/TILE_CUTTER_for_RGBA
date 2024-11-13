@@ -26,6 +26,7 @@ def make_window():
         N_East=Dims_x.get()
         N_South=Dims_y.get()
         N_Hight=Dims_z.get()
+        with_front=int(make_front_var.get())
         with_winter=int(winter_var.get())
         with_dat=int(makedat_var.get())
 
@@ -38,7 +39,7 @@ def make_window():
         if (int(paksize))%4!=0 or int(paksize)<0:
             messagebox.showinfo("エラー","4の倍数を指定してください")
             return
-        afterfile = cpr.pov_ray_cutting(input_file,output_file,paksize,N_East,N_South,N_Hight,with_winter,with_dat)
+        afterfile = cpr.pov_ray_cutting(input_file,output_file,paksize,N_East,N_South,N_Hight,with_winter,with_dat,with_front)
         temp_flag=afterfile.flag()
         if temp_flag ==0:
             messagebox.showinfo("エラー","画像がありません")
@@ -59,6 +60,9 @@ def make_window():
     template_btn = ttk.Button(main_frm, text=".povファイルを作成",command=ask_template)
     input_pak_label = ttk.Label(main_frm, text="pak size")
     input_pak_box = ttk.Entry(main_frm)
+    make_front_var = tk.BooleanVar()
+    make_front_var.set(False)
+    make_front_checkbutton = ttk.Checkbutton(main_frm,variable=make_front_var, text="Front画像も作る")
     winter_var = tk.BooleanVar()
     winter_var.set(False)
     winter_checkbutton = ttk.Checkbutton(main_frm,variable=winter_var, text="積雪画像も作る")
@@ -85,8 +89,9 @@ def make_window():
     Dims_x.grid(column=1,columnspan=2,row=2,padx=5)
     Dims_y.grid(column=3,columnspan=2,row=2,padx=5)
     Dims_z.grid(column=5,columnspan=2,row=2,padx=5)
-    winter_checkbutton.grid(column=0,columnspan=3,row=3,padx=5)
-    makedat_checkbutton.grid(column=3,columnspan=3,row=3,padx=5)
+    make_front_checkbutton.grid(column=0,columnspan=3,row=3,padx=5)
+    winter_checkbutton.grid(column=2,columnspan=3,row=3,padx=5)
+    makedat_checkbutton.grid(column=4,columnspan=3,row=3,padx=5)
     Dims_attantion_label.grid(column=1,columnspan=6,row=4)
     app_btn.grid(column=1,columnspan=5,row=5)
     #main_win.columnconfigure(0, wieght=1)
