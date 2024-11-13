@@ -91,10 +91,10 @@ class povray_template():
             f.write('#end\n')
             f.write('// Place objects in 4 directions\n')
             f.write('object{merge{\n\tobject{\n')
-            f.write('\tintersection{object{output_obj}\n\tobject{output_area_set_x}}\n\t\ttranslate<-1,0,1>*paksize*number_width*3/4\n\t}\n\tobject{\n')
-            f.write('\tintersection{object{output_obj\n\t\trotate<0,90,0>\n\t\ttranslate<0,0,1>*paksize*int_x/2}\n\tobject{output_area_set_z}}\n\t\ttranslate<-1,0,1>*paksize*number_width*1/4\n\t}\n\tobject{\n')
-            f.write('\tintersection{object{output_obj\n\t\trotate<0,180,0>\n\t\ttranslate<0,0,1>*paksize*int_y/2\n\t\ttranslate<1,0,0>*paksize*int_x/2}\n\tobject{output_area_set_x}}\n\t\ttranslate<-1,0,1>*paksize*number_width*(-1)/4\n\t}\n\tobject{\n')
-            f.write('\tintersection{object{output_obj\n\t\trotate<0,270,0>\n\t\ttranslate<1,0,0>*paksize*int_y/2}\n\tobject{output_area_set_z}}\n\t\ttranslate<-1,0,1>*paksize*number_width*(-3)/4\n\t}}\n\tscale<1,.8165,1> // To set 1 distance of y direction as 1px, rescaling the hight\n}\n')
+            f.write('\tintersection{object{output_obj}\n\tobject{output_area_set_z}}\n\t\ttranslate<-1,0,1>*paksize*number_width*3/4\n\t}\n\tobject{\n')
+            f.write('\tintersection{object{output_obj\n\t\trotate<0,90,0>\n\t\ttranslate<0,0,1>*paksize*int_x/2}\n\tobject{output_area_set_x}}\n\t\ttranslate<-1,0,1>*paksize*number_width*1/4\n\t}\n\tobject{\n')
+            f.write('\tintersection{object{output_obj\n\t\trotate<0,180,0>\n\t\ttranslate<0,0,1>*paksize*int_y/2\n\t\ttranslate<1,0,0>*paksize*int_x/2}\n\tobject{output_area_set_z}}\n\t\ttranslate<-1,0,1>*paksize*number_width*(-1)/4\n\t}\n\tobject{\n')
+            f.write('\tintersection{object{output_obj\n\t\trotate<0,270,0>\n\t\ttranslate<1,0,0>*paksize*int_y/2}\n\tobject{output_area_set_x}}\n\t\ttranslate<-1,0,1>*paksize*number_width*(-3)/4\n\t}}\n\tscale<1,.8165,1> // To set 1 distance of y direction as 1px, rescaling the hight\n}\n')
         return
     def make_template(self):
         self.write_snow()
