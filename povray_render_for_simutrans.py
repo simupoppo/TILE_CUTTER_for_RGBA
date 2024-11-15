@@ -81,7 +81,7 @@ class povray_template():
             f.write('#if(make_front_image)\n')
             f.write('object{merge{box{<0-0.1,paksize/8,0-0.1>,<paksize*int_x/2+0.1,paksize*int_y,paksize*int_z/2+0.1>}box{<0-0.11,0+paksize/128,paksize*int_z/4>,<paksize*int_x/2+0.11,paksize*int_y,paksize*int_z/2+0.11>}}}\n')
             f.write('#else\n')
-            f.write('object{box{<0-0.1,-paksize*int_y,0-0.1>,<paksize*int_x/2+0.1,paksize*int_y,paksize*int_z/2>}}\n')            
+            f.write('object{box{<-paksize,-paksize*int_y,-paksize>,<paksize*(int_x+2)/2+0.1,paksize*int_y,paksize*(int_z+2)/2>}}\n')
             f.write('#end\n')
             f.write('#declare output_area_set_z=\n')
             f.write('#if(make_front_image)\n')
