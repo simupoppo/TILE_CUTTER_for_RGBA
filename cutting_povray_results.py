@@ -62,7 +62,7 @@ class pov_ray_cutting():
         temp_render=render_povray(self.infile,outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,0)
         temp_flag_render=temp_render.flag()
         if temp_flag_render==False:
-            return 0
+            return 3
         else:
             if temp_winter==0:
                 temp_flag_cutter=cutting_results(outfile_name,outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,self.with_dat,0)
@@ -75,7 +75,7 @@ class pov_ray_cutting():
             temp_render=render_povray(self.infile,outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,1)
             temp_flag_render=temp_render.flag()
             if temp_flag_render==False:
-                return 0
+                return 3
             else:
                 if temp_winter==0:
                     temp_flag_cutter=cutting_results(outfile_name,outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,self.with_dat,self.make_front)
@@ -86,7 +86,7 @@ class pov_ray_cutting():
             return temp_flag_cutter.flag()
             
 class write_dat():
-    def __init__(self,outfile_dat,outfile,direc,Nx,Ny,Nz,winter,first,make_front=0):
+    def __init__(self,outfile_dat,outfile,direc,Nx,Ny,Nz,winter,first,make_front=0,dims_number=4):
         self.outfile_dat=outfile_dat
         self.outfile=outfile
         self.direc=int(direc)
@@ -96,6 +96,7 @@ class write_dat():
         self.winter=int(winter)
         self.with_Dims=int(first)
         self.make_front=int(make_front)
+        self.dims_number=int(dims_number)
     def writing_dat(self):
         def writing_way(direc,temp_x,temp_y,temp_z,temp_Ny,winter,image):
             if self.make_front==1:
@@ -105,7 +106,7 @@ class write_dat():
         with open(self.outfile_dat,mode="a") as f:
             print(self.outfile_dat)
             if self.with_Dims==1:
-                f.write("Dims="+str(self.Nx)+","+str(self.Ny)+",4\n")
+                f.write("Dims="+str(self.Nx)+","+str(self.Ny)+","+str(self.dims_number)+"\n")
             for ix in range(self.Nx):
                 for iy in range(self.Ny):
                     for iz in range(max(1,self.Nz)):

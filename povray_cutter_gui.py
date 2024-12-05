@@ -19,6 +19,7 @@ def make_window():
         )
         print(output_file_template)
         prfs.povray_template(output_file_template).make_template()
+        file_path.set(output_file_template)
 
     def app():
         paksize=(input_pak_box.get())
@@ -48,6 +49,8 @@ def make_window():
             messagebox.showinfo("完了","完了しました。")
         elif temp_flag ==2:
             messagebox.showinfo("エラー","画像サイズまたは数値の入力が正しくありません")
+        elif temp_flag ==3:
+            messagebox.showinfo("エラー","画像出力に失敗しました")
     main_win = tk.Tk()
     main_win.title("simutrans building addon maker with pov-ray")
     main_win.geometry("700x200")

@@ -1,4 +1,6 @@
 import subprocess as sb
+import os
+import datetime
 
 class render_povray():
     def __init__(self,infile,outfile,paksize,tilesize_x,tilesize_y,tilesize_z,winter,make_front=0):
@@ -18,7 +20,8 @@ class render_povray():
             Width=self.paksize*(max(self.Nx,self.Ny))*4
             Height=self.paksize*(max(self.Nx,self.Ny,self.Nz//2))
             # make inc file which defines some values. 
-            with open("temp.inc",mode="w") as f:
+            temp_inc_filepath=os.path.dirname(self.infile)+"/temp.inc"
+            with open(temp_inc_filepath,mode="w") as f:
                 f.write(declare_povray("int_x",self.Nx))
                 f.write(declare_povray("int_y",self.Ny))
                 f.write(declare_povray("int_z",max(self.Nz,1)))
@@ -33,11 +36,18 @@ class render_povray():
             if self.winter==1:
                 outname+="-winter"
             try:
-                sb.run(["pvengine.exe","/EXIT","/RENDER",str(self.infile),"Width="+str(Width),"Height="+str(Height),"Antialias=Off","+O"+outname])
+                sb.run(["pvengine.exe","/NR","/EXIT","/RENDER",str(self.infile),"Width="+str(Width),"Height="+str(Height),"Antialias=Off","+O"+outname])
             except:
                 try:
                     sb.run(["povray",str(self.infile),"Width="+str(Width),"Height="+str(Height),"Antialias=Off","+O"+outname])
                 except:
+                    return False
+            if os.path.isfile(outname+".png")==False:
+                return False
+            elif os.path.isfile(outname+"_0.png"):
+                t_1=os.path.getmtime(outname+".png")
+                t_2=os.path.getmtime(outname+"_0.png")
+                if (t_1<t_2):
                     return False
                 else:
                     return True
@@ -49,8 +59,9 @@ class render_povray():
 class povray_template():
     def __init__(self,outfile):
         self.outfile=outfile
-    def write_snow(self):
-        with open("snow.inc",mode="w") as f:
+    def write_snow(self,out):
+        snow_outfile=os.path.dirname(out)+"/snow.inc"
+        with open(snow_outfile,mode="w") as f:
             f.write("#declare winter_light=\n")
             f.write("light_source {\n\t<0,173,0>\n\tcolor rgb 33\n\tparallel\n\tpoint_at<0,0,0>\n}\n")
         return
@@ -62,7 +73,7 @@ class povray_template():
             f.write('// The default tile scale in this pov-ray file (not for pak file)\n')
             f.write('#local paksize=64;\n\n\n')
             f.write('// ---camera setting---\n')
-            f.write('camera {\n\torthographic\n\tlocation <100,81.64965809277,100>*number_hight*paksize/128\n\tlook_at <0,0.425,0>*paksize/128\n\tright<1,0,-1> *paksize*number_width*2\n\tup<1,0,1>  *paksize*number_hight/2\n\t}\n\n\n')
+            f.write('camera {\n\torthographic\n\tlocation <100,81.64965809277,100>*number_hight*paksize/128\n\tlook_at <0,0.5,0>*paksize/128\n\tright<1,0,-1> *paksize*number_width*2\n\tup<1,0,1>  *paksize*number_hight/2\n\t}\n\n\n')
             f.write('// ---light setting---\n')
             f.write('light_source {\n\t<0,173,100>\n\tcolor rgb 1\n\tparallel\n\tpoint_at<0,0,0>\n}\n// If winter==1, set a light to make the snow cover.\n#if(winter)\n\tlight_source{winter_light}\n#end\n\n\n')
             f.write('// ----------------------------------\n')
@@ -97,7 +108,7 @@ class povray_template():
             f.write('\tintersection{object{output_obj\n\t\trotate<0,270,0>\n\t\ttranslate<1,0,0>*paksize*int_y/2}\n\tobject{output_area_set_x}}\n\t\ttranslate<-1,0,1>*paksize*number_width*(-3)/4\n\t}}\n\tscale<1,.8165,1> // To set 1 distance of y direction as 1px, rescaling the hight\n}\n')
         return
     def make_template(self):
-        self.write_snow()
+        self.write_snow(self.outfile)
         print("make snow.inc")
         self.write_file(self.outfile)
         print("make "+self.outfile)
