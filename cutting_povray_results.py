@@ -18,6 +18,7 @@ class cutting_results():
             if self.winter==1:
                 outfile_name+="-winter"
             outfile_name+=".png"
+            print("cutting:"+outfile_name)
             # base_point_x=self.paksize//2*max(self.Nx,self.Ny)*(2*i+1)
             # base_point_y=self.paksize//2*(max(self.Nx,self.Ny,self.Nz//2)+max(self.Nx,self.Ny))
             temp_Nx=((self.Nx+self.Ny)+(-1)**i*(self.Nx-self.Ny))//2
@@ -65,11 +66,14 @@ class pov_ray_cutting():
             return 3
         else:
             if temp_winter==0:
+                print("summer images")
                 temp_flag_cutter=cutting_results(outfile_name,outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,self.with_dat,0)
             else:
+                print("winter images")
                 temp_flag_cutter=cutting_results(outfile_name[:-4]+"-winter"+".png",outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,self.with_dat,0)    
-            if temp_flag_cutter.flag()!=1:
-                return temp_flag_cutter.flag()
+            temp_flag=temp_flag_cutter.flag()
+            if temp_flag!=1:
+                return temp_flag
         if self.make_front==1:
             outfile_name=outfile_name[:-4]+"_front"+".png"
             temp_render=render_povray(self.infile,outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,1)
@@ -78,12 +82,15 @@ class pov_ray_cutting():
                 return 3
             else:
                 if temp_winter==0:
+                    print("summer front images")
                     temp_flag_cutter=cutting_results(outfile_name,outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,self.with_dat,self.make_front)
                 else:
+                    print("winter front images")
                     temp_flag_cutter=cutting_results(outfile_name[:-4]+"-winter"+".png",outfile_name,self.paksize,self.Nx,self.Ny,self.Nz,temp_winter,self.with_dat,self.make_front)  
-                return temp_flag_cutter.flag()  
-        else: 
-            return temp_flag_cutter.flag()
+                temp_flag=temp_flag_cutter.flag()
+            if temp_flag!=1:
+                return temp_flag
+        return temp_flag
             
 class write_dat():
     def __init__(self,outfile_dat,outfile,direc,Nx,Ny,Nz,winter,first,make_front=0,dims_number=4):
@@ -104,7 +111,7 @@ class write_dat():
             else:
                 return "BackImage["+str(direc)+"]["+str(temp_y)+"]["+str(temp_x)+"]["+str(temp_z)+"][0]["+str(winter)+"]="+str(image)+"."+str(temp_x)+"."+str(temp_y+temp_z*temp_Ny)+"\n"
         with open(self.outfile_dat,mode="a") as f:
-            print(os.path.basename(self.outfile_dat))
+            print("write dat with "+os.path.basename(self.outfile_dat)+",winter:"+str(self.winter))
             if self.with_Dims==1:
                 f.write("Dims="+str(self.Nx)+","+str(self.Ny)+","+str(self.dims_number)+"\n")
             for ix in range(self.Nx):
