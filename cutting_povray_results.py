@@ -104,12 +104,12 @@ class write_dat():
             else:
                 return "BackImage["+str(direc)+"]["+str(temp_y)+"]["+str(temp_x)+"]["+str(temp_z)+"][0]["+str(winter)+"]="+str(image)+"."+str(temp_x)+"."+str(temp_y+temp_z*temp_Ny)+"\n"
         with open(self.outfile_dat,mode="a") as f:
-            print(self.outfile_dat)
+            print(os.path.basename(self.outfile_dat))
             if self.with_Dims==1:
                 f.write("Dims="+str(self.Nx)+","+str(self.Ny)+","+str(self.dims_number)+"\n")
             for ix in range(self.Nx):
                 for iy in range(self.Ny):
                     for iz in range(max(1,self.Nz)):
-                        f.write(writing_way(self.direc,ix,iy,iz,self.Ny,self.winter,self.outfile))
+                        f.write(writing_way(self.direc,ix,iy,iz,self.Ny,self.winter,os.path.basename(self.outfile)))
 
 
