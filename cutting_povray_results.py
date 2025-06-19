@@ -107,9 +107,9 @@ class write_dat():
     def writing_dat(self):
         def writing_way(direc,temp_x,temp_y,temp_z,temp_Ny,winter,image):
             if self.make_front==1:
-                return "FrontImage["+str(direc)+"]["+str(temp_y)+"]["+str(temp_x)+"]["+str(temp_z)+"][0]["+str(winter)+"]="+str(image)+"."+str(temp_x)+"."+str(temp_y+temp_z*temp_Ny)+"\n"
+                return "FrontImage["+str(direc)+"]["+str(temp_y)+"]["+str(temp_x)+"]["+str(temp_z)+"][0]["+str(winter)+"]="+str(image)+"."+str(temp_y+temp_z*temp_Ny)+"."+str(temp_x)+"\n"
             else:
-                return "BackImage["+str(direc)+"]["+str(temp_y)+"]["+str(temp_x)+"]["+str(temp_z)+"][0]["+str(winter)+"]="+str(image)+"."+str(temp_x)+"."+str(temp_y+temp_z*temp_Ny)+"\n"
+                return "BackImage["+str(direc)+"]["+str(temp_y)+"]["+str(temp_x)+"]["+str(temp_z)+"][0]["+str(winter)+"]="+str(image)+"."+str(temp_y+temp_z*temp_Ny)+"."+str(temp_x)+"\n"
         with open(self.outfile_dat,mode="a") as f:
             print("write dat with "+os.path.basename(self.outfile_dat)+",winter:"+str(self.winter))
             if self.with_Dims==1:
