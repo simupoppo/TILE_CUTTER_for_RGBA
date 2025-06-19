@@ -71,7 +71,7 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
                 temp_y=iy+temp_base_y-paksize
                 if 0<=temp_x<max_x:
                     if 0<=temp_y<max_y:
-                        if temp_Nz == 1:
+                        if temp_Nz == 0:
                             if ix<paksize//2:
                                 if temp_mode==0:
                                     if -(ix//2)+temp_base_y-paksize//4<=temp_y<=(ix//2)+temp_base_y-paksize//4:
@@ -103,7 +103,7 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
                     temp_return=bgcolor
                 outimg[(temp_Ny+Ny*temp_Nz)*paksize+iy,temp_Nx*paksize+ix]=temp_return
                 if temp_mode!=0:
-                    if (ix<paksize//2 and temp_base_y-paksize*3//4<=temp_y<=(ix//2)+temp_base_y-paksize//4) or (ix>paksize//2-1 and temp_base_y-paksize*3//4<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4):
+                    if (ix<paksize//2 and temp_base_y-paksize<=temp_y<=(ix//2)+temp_base_y-paksize//4) or (ix>paksize//2-1 and temp_base_y-paksize<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4):
                         temp_img[temp_y,temp_x]=bgcolor
     def extract_copy():
         for temp_Nz in range(using_Nz):
