@@ -71,29 +71,32 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
                 temp_y=iy+temp_base_y-paksize
                 if 0<=temp_x<max_x:
                     if 0<=temp_y<max_y:
-                        if ix<paksize//2:
-                            if temp_mode==0:
-                                if -(ix//2)+temp_base_y-paksize//4<=temp_y<=(ix//2)+temp_base_y-paksize//4:
-                                    temp_return=temp_img[temp_y,temp_x]
+                        if temp_Nz == 1:
+                            if ix<paksize//2:
+                                if temp_mode==0:
+                                    if -(ix//2)+temp_base_y-paksize//4<=temp_y<=(ix//2)+temp_base_y-paksize//4:
+                                        temp_return=temp_img[temp_y,temp_x]
+                                    else:
+                                        temp_return=bgcolor
                                 else:
-                                    temp_return=bgcolor
+                                    if temp_base_y-paksize<=temp_y<=(ix//2)+temp_base_y-paksize//4:
+                                        temp_return=temp_img[temp_y,temp_x]
+                                        # print(temp_return,temp_img[temp_y,temp_x],temp_y,temp_x)
+                                    else:
+                                        temp_return=bgcolor
                             else:
-                                if temp_base_y-paksize*3//4<=temp_y<=(ix//2)+temp_base_y-paksize//4:
-                                    temp_return=temp_img[temp_y,temp_x]
-                                    # print(temp_return,temp_img[temp_y,temp_x],temp_y,temp_x)
+                                if temp_mode==0:
+                                    if -((paksize-ix-1)//2)+temp_base_y-paksize//4<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4:
+                                        temp_return=temp_img[temp_y,temp_x]
+                                    else:
+                                        temp_return=bgcolor
                                 else:
-                                    temp_return=bgcolor
+                                    if temp_base_y-paksize<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4:
+                                        temp_return=temp_img[temp_y,temp_x]
+                                    else:
+                                        temp_return=bgcolor
                         else:
-                            if temp_mode==0:
-                                if -((paksize-ix-1)//2)+temp_base_y-paksize//4<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4:
-                                    temp_return=temp_img[temp_y,temp_x]
-                                else:
-                                    temp_return=bgcolor
-                            else:
-                                if temp_base_y-paksize*3//4<=temp_y<=((paksize-ix-1)//2)+temp_base_y-paksize//4:
-                                    temp_return=temp_img[temp_y,temp_x]
-                                else:
-                                    temp_return=bgcolor
+                            temp_return=temp_img[temp_y,temp_x]
                     else:
                         temp_return=bgcolor
                 else:
@@ -107,7 +110,7 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
             for temp_Nx in range(Nx):
                 for temp_Ny in range(Ny):
                     temp_base_x=basepoint_x-(Nx-1-temp_Nx)*paksize//2+(Ny-1-temp_Ny)*paksize//2
-                    temp_base_y=basepoint_y-(Nx-1-temp_Nx)*paksize//4-(Ny-1-temp_Ny)*paksize//4-(temp_Nz)*paksize//4
+                    temp_base_y=basepoint_y-(Nx-1-temp_Nx)*paksize//4-(Ny-1-temp_Ny)*paksize//4-(temp_Nz)*paksize
                     cutting(temp_base_x,temp_base_y,temp_Nx,temp_Ny,temp_Nz)
         
                         
