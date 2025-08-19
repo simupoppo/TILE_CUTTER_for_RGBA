@@ -163,6 +163,29 @@ def cutting_program(inimg,paksize,mode,basepoint_x,basepoint_y,Nx,Ny,Nz,max_x,ma
     print(outimg.shape)
     return outimg
 
+class write_dat():
+    def __init__(self,outfile_dat,outfile,direc,Nx,Ny,Nz,winter=0,first=0,make_front=0):
+        self.outfile_dat=outfile_dat
+        self.outfile=outfile
+        self.direc=int(direc)
+        self.Nx=int(Nx)
+        self.Ny=int(Ny)
+        self.Nz=int(Nz)
+        self.winter=int(winter)
+        self.with_Dims=int(first)
+        self.make_front=int(make_front)
+    def writing_dat(self):
+        def writing_way(direc,temp_x,temp_y,temp_z,temp_Ny,winter,image):
+            if self.make_front==1:
+                return "FrontImage["+str(direc)+"]["+str(temp_y)+"]["+str(temp_x)+"]["+str(temp_z)+"][0]["+str(winter)+"]="+str(image)+"."+str(temp_y+temp_z*temp_Ny)+"."+str(temp_x)+"\n"
+            else:
+                return "BackImage["+str(direc)+"]["+str(temp_y)+"]["+str(temp_x)+"]["+str(temp_z)+"][0]["+str(winter)+"]="+str(image)+"."+str(temp_y+temp_z*temp_Ny)+"."+str(temp_x)+"\n"
+        with open(self.outfile_dat,mode="a") as f:
+            print("write dat with "+os.path.basename(self.outfile_dat))
+            for ix in range(self.Nx):
+                for iy in range(self.Ny):
+                    for iz in range(max(1,self.Nz)):
+                        f.write(writing_way(self.direc,ix,iy,iz,self.Ny,self.winter,os.path.basename(self.outfile)))
 
 
 def make_window():
@@ -191,6 +214,9 @@ def make_window():
         if afterfile.flag() ==0:
             messagebox.showinfo("エラー","画像がありません")
         elif afterfile.flag() ==1:
+            outdatfile = output_file[:-3]+"dat"
+            dat_results=write_dat(outdatfile,output_file,Direction.get(),N_East,N_South,N_Hight)
+            dat_results.writing_dat()
             messagebox.showinfo("完了","完了しました。")
         elif afterfile.flag() ==2:
             messagebox.showinfo("エラー","画像サイズまたは数値の入力が正しくありません")
@@ -218,6 +244,12 @@ def make_window():
     Dims_x.insert(tk.END,"1")
     Dims_y.insert(tk.END,"1")
     Dims_z.insert(tk.END,"1")
+    Direction_str = ttk.Label(main_frm, text="画像の方角")
+    Direction = ttk.Entry(main_frm)
+    Direction.insert(tk.END,"1")
+    makedat_bool=tk.BooleanVar()
+    makedat=ttk.Checkbutton(main_frm,text="DATファイルを生成",variable=makedat_bool)
+    makedat_bool.set(False)
 
     app_btn=ttk.Button(main_frm, text="変換を実行",command=app)
     folder_label.grid(column=0,row=0,pady=10)
@@ -233,7 +265,10 @@ def make_window():
     Dims_y.grid(column=3,columnspan=2,row=3,padx=5)
     Dims_z.grid(column=5,columnspan=2,row=3,padx=5)
     Dims_attantion_label.grid(column=1,columnspan=6,row=4)
-    app_btn.grid(column=1,columnspan=5,row=5)
+    Direction_str.grid(column=0,row=5)
+    Direction.grid(column=1,row=5)
+    makedat.grid(column=2,columnspan=3,row=5)
+    app_btn.grid(column=1,columnspan=5,row=6)
     #main_win.columnconfigure(0, wieght=1)
     #main_win.rowconfigure(0, wieght=1)
     #main_frm.columnconfigure(1, wieght=1)
